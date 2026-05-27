@@ -1,8 +1,8 @@
 //organizando código, Controllers usado geralmente para armazenar as requisições HTTP e separar da parte das rotas
 
-import conexao from "../config/database"
+import conexao from "../config/database.js"
 
-async function cadastrarUsuario(req, res) {
+export async function cadastrarUsuario(req, res) {
     try{
         //Criando 3 constantes e guardando a requisição.body dentro de cada uma delas
         const {nome, email, senha} = req.body
@@ -17,7 +17,7 @@ async function cadastrarUsuario(req, res) {
         }
         //verifica se ja existe um usario com o mesmo email
         const [usuarioExitente] = await conexao.query(//query ta buscando emais da lista e await sei la
-            "SELECT * FROM Where email = ?"
+            "SELECT * FROM usuarios WHERE email = ?",
             [email]
         )
 
@@ -26,7 +26,7 @@ async function cadastrarUsuario(req, res) {
         }
         //Sucesso cadastrando usuario
         await conexao.query(
-            "INSERT INTO usuarios(`nome`, `email`, `senha`) VALUES (?,?,?)"
+            "INSERT INTO usuarios(`nome`, `email`, `senha`) VALUES (?,?,?)",
             [nome, email, senha]
         )
         //redirecionando para o login com mensagem de casdastro efetuado com sucesso
@@ -38,12 +38,12 @@ async function cadastrarUsuario(req, res) {
     }
 }
 
-async function realizarLogin(req, res) {
+export async function realizarLogin(req, res) {
     try{
         const {email, senha} = req.body
 
         const [usuarios] = await conexao.query(
-            "SELECT * FROM usuarios WHERE email = ? AND senha = ?"
+            "SELECT * FROM usuarios WHERE email = ? AND senha = ?",
             [email, senha]
         )
         if(usuarios.length === 0){
@@ -58,4 +58,28 @@ async function realizarLogin(req, res) {
         res.send("Erro ao realizar login")
     }
     
+}
+//Exibir página de sucesso
+export function exibirSucesso(req, res){
+    const nome = req.query.nome
+    res.send(`
+    <!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login realizado</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <main class="container">
+            <section class="card">
+            <h1>Login realizado com sucesso!</h1>
+            <p>Bem-vindo(a), ${nome}.</p>
+            <a class="link-button" href="/login.html">Voltar para o login</a>
+        </section>
+        </main>
+    </body>
+    </html>
+    `);
 }

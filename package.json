@@ -13,7 +13,9 @@
     "express",
     "mysql",
     "login",
-    "cadastro"
+    "cadastro",
+    "export",
+    "import"
   ],
   "author": "",
   "license": "ISC",
