@@ -18,7 +18,7 @@ export async function cadastrarUsuario(req, res) {
         //verifica se ja existe um usario com o mesmo email
         const [usuarioExitente] = await conexao.query(//query ta buscando emais da lista e await sei la
             "SELECT * FROM usuarios WHERE email = ?",
-            [email]
+            [email] 
         )
 
         if(usuarioExitente.length>0){
@@ -34,7 +34,7 @@ export async function cadastrarUsuario(req, res) {
 
     }catch (erro){
         console.log("Erro ao cadastrar o usário", erro)
-        res.sen("Eroo ao cadastrar usuário")
+        res.send("Erro ao cadastrar usuário")
     }
 }
 
